@@ -1,330 +1,138 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Moot AI — The AI Coach for Moot Court</title>
-  <meta name="description" content="Moot AI is a browser-based moot court platform with an AI coach that scores arguments, maps reasoning, and turns sessions into actionable feedback." />
+  <meta name="description"
+        content="Moot AI is a browser-based moot court platform with an AI coach that scores arguments, maps reasoning, and turns sessions into actionable feedback." />
   <meta name="theme-color" content="#0b0f19" />
-  <meta property="og:title" content="Moot AI — The AI Coach for Moot Court" />
-  <meta property="og:description" content="Score arguments, map reasoning, and get instant feedback. All in the browser." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='100%25' height='100%25' fill='%230b0f19'/><text x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='Arial' font-size='60'>Moot AI</text><text x='50%25' y='70%25' dominant-baseline='middle' text-anchor='middle' fill='%23a8b1c7' font-family='Arial' font-size='28'>The AI Coach for Moot Court</text></svg>" />
-  <meta name="twitter:card" content="summary_large_image" />
   <style>
-    :root{
-      --bg:#070b14; --panel:#0c1222; --text:#f2f5fb; --muted:#a8b1c7;
-      --brand:#7dd3fc; --brand2:#a78bfa; --ring:rgba(125,211,252,.35);
-      --border:color-mix(in oklab,var(--text),transparent 90%);
-      --radius:18px; --shadow:0 24px 50px rgba(0,0,0,.35); --max:1080px;
+    :root {
+      --bg: #04060a;
+      --accent: #1ef2ff;
+      --text: #e0e0e0;
     }
-    @media (prefers-color-scheme: light){
-      :root{--bg:#f7f9ff; --panel:#ffffff; --text:#0b1020; --muted:#52607a;
-            --brand:#0ea5e9; --brand2:#7c3aed; --border:rgba(0,0,0,.08); --shadow:0 18px 36px rgba(2,6,23,.08);}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(circle at center, #0b0f19 0%, #000 80%);
+      color: var(--text);
+      font-family: "Orbitron", sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 ui-sans-serif,system-ui,Inter,Segoe UI,Roboto,Arial}
-    a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
-    .wrap{max-width:var(--max);margin:auto;padding:0 20px}
-    header{position:sticky;top:0;z-index:40;backdrop-filter:saturate(120%) blur(8px);
-      border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--bg),#000 6%)}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0}
-    .logo{display:flex;gap:.6rem;align-items:center;font-weight:900;letter-spacing:.2px}
-    .logo svg{width:28px;height:28px}
-    .links{display:flex;gap:1rem;align-items:center}
-    .links a{padding:.5rem .75rem;border-radius:10px}
-    .links a:hover{background:color-mix(in oklab,var(--text),transparent 92%)}
-    .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.1rem;border-radius:999px;border:1px solid transparent;
-      background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#061018; font-weight:800; box-shadow:var(--shadow)}
-    .btn.alt{background:transparent;border:1px solid var(--border);color:var(--text)}
-    .pill{display:inline-flex;gap:.45rem;align-items:center;border:1px solid var(--border);border-radius:999px;padding:.35rem .65rem;color:var(--muted);font-weight:700}
-    .hero{position:relative;overflow:hidden}
-    .glow{position:absolute;inset:-30% -10% auto -10%;height:80vh;filter:blur(60px);opacity:.35;pointer-events:none;background:
-      radial-gradient(700px 350px at 20% 30%, rgba(125,211,252,.28), transparent 60%),
-      radial-gradient(640px 340px at 80% 20%, rgba(167,139,250,.25), transparent 60%),
-      radial-gradient(860px 460px at 50% 80%, rgba(56,189,248,.22), transparent 60%)}
-    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;padding:5.5rem 0 2.5rem}
-    h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;margin:.2rem 0 1rem}
-    .lead{color:var(--muted);font-size:1.125rem}
-    .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius)}
-    .panel.pad{padding:1.2rem}
-    .section{padding:3.5rem 0}
-    h2{font-size:clamp(1.5rem,3.2vw,2.1rem);margin:0 0 .8rem}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
-    .step{padding:1rem}
-    .tag{font-size:.8rem;color:var(--muted);font-weight:700}
-    .list{display:grid;gap:.6rem} .list li{list-style:none;padding:.8rem 1rem;border:1px dashed var(--border);border-radius:12px}
-    .cta{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin-top:1.2rem}
-    .faq details{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1rem}
-    .faq summary{cursor:pointer;font-weight:800}
-    .foot{border-top:1px solid var(--border);color:var(--muted);padding:2rem 0}
-    input, textarea{width:100%;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:.9rem}
-    textarea{resize:vertical}
-    .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-    @media (max-width:980px){.hero-grid,.grid-2{grid-template-columns:1fr}}
-    @media (max-width:720px){.grid-3{grid-template-columns:1fr}}
+
+    .grid {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(30,242,255,0.05) 50px),
+        repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(30,242,255,0.05) 50px);
+      transform: rotateX(60deg) translateY(60px);
+      animation: moveGrid 14s linear infinite;
+      z-index: 0;
+    }
+    @keyframes moveGrid {
+      from { transform: rotateX(60deg) translateY(60px) translateZ(0); }
+      to   { transform: rotateX(60deg) translateY(60px) translateZ(-120px); }
+    }
+
+    .content {
+      z-index: 1;
+      text-align: center;
+      max-width: 720px;
+      padding: 0 1.5em;
+    }
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-shadow: 0 0 25px var(--accent);
+      margin-bottom: 0.3em;
+    }
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: #b0b0b0;
+      margin-bottom: 1.5em;
+    }
+    p {
+      font-size: 1.1rem;
+      color: #c0c0c0;
+      line-height: 1.6;
+      margin-bottom: 1.8em;
+    }
+    ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2em;
+      margin-bottom: 2.5em;
+    }
+    ul li {
+      border: 1px solid rgba(30,242,255,0.3);
+      border-radius: 8px;
+      padding: 0.6em 1.2em;
+      background: rgba(255,255,255,0.02);
+      font-size: 0.95rem;
+      color: #9feaff;
+      text-shadow: 0 0 6px rgba(30,242,255,0.4);
+    }
+    a.button {
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.9em 2.5em;
+      border-radius: 50px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 0 25px var(--accent), inset 0 0 6px #fff;
+      transition: all 0.3s ease;
+    }
+    a.button:hover {
+      background: #fff;
+      color: #000;
+      box-shadow: 0 0 45px var(--accent);
+    }
+    footer {
+      position: absolute;
+      bottom: 15px;
+      font-size: 0.9rem;
+      color: #888;
+      letter-spacing: 1px;
+    }
   </style>
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"Moot AI",
-    "url":"https://mootai.app",
-    "description":"AI coach for moot court—scores arguments, maps reasoning, and turns sessions into actionable feedback.",
-    "contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"hello@mootai.app"}
-  }
-  </script>
 </head>
 <body>
-  <a class="mono" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden" href="#main">Skip to content</a>
+  <div class="grid"></div>
 
-  <header>
-    <div class="wrap nav">
-      <a class="logo" href="#top" aria-label="Moot AI home">
-        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <defs><linearGradient id="g" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#7dd3fc"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
-          <rect x="2" y="2" width="28" height="28" rx="7" stroke="url(#g)" stroke-width="2"></rect>
-          <path d="M9 16h14M16 9v14" stroke="url(#g)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span>Moot <span style="background:linear-gradient(90deg,#7dd3fc,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent">AI</span></span>
-      </a>
-      <nav class="links" aria-label="Primary">
-        <a href="#why">Why Moot AI</a>
-        <a href="#how">How it Works</a>
-        <a href="#faq">FAQ</a>
-        <a class="btn alt" href="#contact">Request Pilot</a>
-      </nav>
-    </div>
-  </header>
+  <main class="content">
+    <h1>Moot AI</h1>
+    <h2>The AI Coach for Moot Court</h2>
+    <p>
+      Moot AI is a browser-based moot court platform with an intelligent coach that scores arguments,
+      maps reasoning, and transforms debate sessions into actionable feedback. Designed for law students,
+      educators, and professionals, Moot AI helps users visualize their logic, refine delivery, and
+      understand how their arguments hold up under pressure.
+    </p>
 
-  <section class="hero" id="top" aria-label="Hero">
-    <div class="glow" aria-hidden="true"></div>
-    <div class="wrap hero-grid">
-      <div>
-        <span class="pill">AI coach • Real-time feedback • In the browser</span>
-        <h1>The AI coach for moot court.</h1>
-        <p class="lead">Practice like a team of champions. Moot AI listens, scores, and explains <em>why</em> your argument works—then turns every session into a crisp brief of insights you can act on.</p>
-        <div class="cta">
-          <a class="btn" href="#contact">Join the Pilot</a>
-          <a class="btn alt" href="#demo">Watch a 60-sec demo</a>
-        </div>
-        <div class="cta">
-          <span class="pill">Instant transcripts</span>
-          <span class="pill">Rubric scoring</span>
-          <span class="pill">Argument maps</span>
-          <span class="pill">Privacy-first</span>
-        </div>
-      </div>
-      <div class="panel pad" aria-label="AI feedback preview">
-        <p class="tag mono" style="margin:.2rem 0 .6rem">Live AI feedback (sample)</p>
-        <div class="panel" style="padding:1rem; background:color-mix(in oklab,var(--panel),#000 4%)">
-          <p style="margin:0"><strong>Clarity</strong> • “Opening establishes standing, but the relief sought is vague. Consider stating the specific injunctive standard in the first 20 seconds.”</p>
-        </div>
-        <div class="panel" style="padding:1rem; margin-top:.6rem; background:color-mix(in oklab,var(--panel),#000 4%)">
-          <p style="margin:0"><strong>Authority</strong> • “You cite <span class="mono">Smith v. Green</span> for strict scrutiny, but the fact pattern here is intermediate—offer the alternative prong to pre-empt the bench.”</p>
-        </div>
-        <div class="panel" style="padding:1rem; margin-top:.6rem; background:color-mix(in oklab,var(--panel),#000 4%)">
-          <p style="margin:0"><strong>Delivery</strong> • “Answer the question, then bridge back. Try: ‘Yes, Your Honor—under <span class="mono">Turner</span>, the threshold…’ ”</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    <ul>
+      <li>Real-time Speech Analysis</li>
+      <li>Interactive Reasoning Maps</li>
+      <li>AI-Generated Scoring Metrics</li>
+      <li>Performance Reports & Transcripts</li>
+    </ul>
 
-  <main id="main">
-    <!-- Why Moot AI -->
-    <section class="section" id="why" aria-label="Why Moot AI">
-      <div class="wrap">
-        <h2>Why programs choose Moot AI</h2>
-        <div class="grid-3">
-          <div class="panel pad">
-            <h3>Real-time coaching</h3>
-            <p>Get actionable nudges during or after rounds—grounded in your rubric and course goals.</p>
-          </div>
-          <div class="panel pad">
-            <h3>From talk to takeaways</h3>
-            <p>Automatic transcripts with highlights, timestamps, and a one-page brief of strengths and fixes.</p>
-          </div>
-          <div class="panel pad">
-            <h3>Fair, repeatable scoring</h3>
-            <p>Consistent rubric scoring across teams and semesters, with clear criteria and exemplars.</p>
-          </div>
-          <div class="panel pad">
-            <h3>Argument maps</h3>
-            <p>See the logic tree behind each claim—what supported it, where it was challenged, and what to tighten.</p>
-          </div>
-          <div class="panel pad">
-            <h3>Scenario templates</h3>
-            <p>Spin up rounds fast with prebuilt prompts (constitutional, evidentiary, appellate) or import your own.</p>
-          </div>
-          <div class="panel pad">
-            <h3>Privacy-first</h3>
-            <p>Invite-only rooms, opt-in recording, and data retention controls suited for academic programs.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- How it Works -->
-    <section class="section" id="how" aria-label="How it works">
-      <div class="wrap">
-        <h2>How it works</h2>
-        <div class="grid-3">
-          <div class="panel step">
-            <span class="tag">Step 1</span>
-            <h3>Create a round</h3>
-            <p>Share a link, assign roles, and choose a template. No installs—just the browser.</p>
-          </div>
-          <div class="panel step">
-            <span class="tag">Step 2</span>
-            <h3>Argue naturally</h3>
-            <p>Speak, object, examine. Moot AI listens for clarity, structure, authority, and delivery.</p>
-          </div>
-          <div class="panel step">
-            <span class="tag">Step 3</span>
-            <h3>Review & improve</h3>
-            <p>Get a scored rubric, argument map, and a concise improvement brief for the next practice.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Demo -->
-    <section class="section" id="demo" aria-label="Demo">
-      <div class="wrap">
-        <h2>See the AI coach in action</h2>
-        <div class="panel" style="overflow:hidden">
-          <div style="aspect-ratio:16/9;display:grid;place-items:center;background:color-mix(in oklab,var(--panel),#000 3%)">
-            <!-- Replace with your video or YouTube embed -->
-            <svg width="84" height="84" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" opacity=".25"/>
-              <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
-            </svg>
-            <p class="tag" style="margin-top:.6rem">Demo/p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Simple Metrics / Social Proof -->
-    <section class="section" aria-label="Outcomes">
-      <div class="wrap">
-        <h2>What teams get</h2>
-        <div class="grid-3">
-          <div class="panel pad"><strong style="font-size:1.6rem">+30%</strong><div class="tag">Faster prep cycles*</div></div>
-          <div class="panel pad"><strong style="font-size:1.6rem">Consistent</strong><div class="tag">Rubric scoring</div></div>
-          <div class="panel pad"><strong style="font-size:1.6rem">1-page</strong><div class="tag">Brief after each round</div></div>
-        </div>
-        <p class="tag" style="margin-top:.6rem">*Early pilot programs; your mileage may vary.</p>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section faq" id="faq" aria-label="FAQ">
-      <div class="wrap">
-        <h2>FAQ</h2>
-        <div class="grid-2">
-          <details open>
-            <summary>Do we need to install anything?</summary>
-            <p>No. It’s browser-native. Share a link, pick roles, and start.</p>
-          </details>
-          <details>
-            <summary>Can we use our own rubric?</summary>
-            <p>Yes. Upload your criteria or start from our templates and adjust weights.</p>
-          </details>
-          <details>
-            <summary>Does the AI grade for us?</summary>
-            <p>It provides consistent rubric scores and explanations. Instructors remain in control.</p>
-          </details>
-          <details>
-            <summary>How is data handled?</summary>
-            <p>Rooms are invite-only. Transcripts/recordings are opt-in with time-boxed retention options.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="section" aria-label="Call to action">
-      <div class="wrap panel pad">
-        <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">
-          <div>
-            <h2 style="margin:.1rem 0">Pilot Moot AI at your program</h2>
-            <p class="tag">We’re onboarding a small set of schools and clinics this term.</p>
-          </div>
-          <a class="btn" href="#contact">Request a Pilot</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="section" id="contact" aria-label="Contact">
-      <div class="wrap">
-        <h2>Get in touch</h2>
-        <div class="grid-2">
-          <form class="panel pad" onsubmit="sendMail(event)">
-            <label class="tag" for="name">Name</label>
-            <input id="name" name="name" required placeholder="Your name" />
-            <label class="tag" for="email">Email</label>
-            <input id="email" name="email" type="email" required placeholder="you@university.edu" />
-            <label class="tag" for="msg">Message</label>
-            <textarea id="msg" name="message" rows="4" placeholder="Tell us about your program, timeline, and goals"></textarea>
-            <div class="cta">
-              <button class="btn" type="submit">Send</button>
-              <a class="btn alt" href="mailto:hello@mootai.app">Email instead</a>
-            </div>
-          </form>
-          <div class="panel pad">
-            <h3>What to include</h3>
-            <ul class="list">
-              <li>Program name and course</li>
-              <li>Target dates and weekly cadence</li>
-              <li>Your rubric or key criteria</li>
-              <li>Any privacy/retention requirements</li>
-            </ul>
-            <p class="tag">Prefer async? Email <span class="mono">hello@mootai.app</span></p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <a href="https://mootie-10ufheqml-kris-ps-projects.vercel.app/" class="button">Begin Session</a>
   </main>
 
-  <footer class="foot">
-    <div class="wrap" style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center">
-      <div>© <span id="y"></span> Moot AI</div>
-      <a class="pill" href="#top">Back to top ↑</a>
-    </div>
-  </footer>
-
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-    function sendMail(e){
-      e.preventDefault();
-      const n = document.getElementById('name').value.trim();
-      const em = document.getElementById('email').value.trim();
-      const m = document.getElementById('msg').value.trim();
-      const subject = encodeURIComponent('Moot AI — Pilot Inquiry');
-      const body = encodeURIComponent(`Name: ${n}\nEmail: ${em}\n\nMessage:\n${m}\n\n--\nSent from mootai.app`);
-      window.location.href = `mailto:hello@mootai.app?subject=${subject}&body=${body}`;
-    }
-    // Focus ring for keyboard users
-    let usingMouse = false;
-    document.addEventListener('mousedown',()=>usingMouse=true,{passive:true});
-    document.addEventListener('keydown',e=>{
-      if(e.key==='Tab' && !usingMouse){
-        document.querySelectorAll('a,button,input,textarea,summary').forEach(el=>{
-          el.addEventListener('focus',()=>el.style.boxShadow=`0 0 0 6px var(--ring)`);
-          el.addEventListener('blur',()=>el.style.boxShadow='none');
-        });
-      }
-    },{passive:true});
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click',e=>{
-        const id=a.getAttribute('href').slice(1);
-        const el=document.getElementById(id);
-        if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
-      });
-    });
-  </script>
+  <footer>© 2025 Moot AI — All rights reserved.</footer>
 </body>
 </html>
