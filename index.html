@@ -5,53 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Moot AI — The AI Coach for Moot Court</title>
   <meta name="description"
-        content="Moot AI is a browser-based moot court platform with an AI coach that scores arguments, maps reasoning, and turns sessions into actionable feedback." />
+        content="Moot AI is a next-generation moot court platform with real-time AI coaching, argument scoring, and performance analytics." />
   <meta name="theme-color" content="#0b0f19" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #04060a;
       --accent: #1ef2ff;
+      --accent2: #f4ffb8;
       --text: #e0e0e0;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%;
       width: 100%;
-      background: radial-gradient(circle at center, #0b0f19 0%, #000 80%);
+      background: radial-gradient(circle at 30% 30%, #0c1425 0%, #000 80%);
       color: var(--text);
-      font-family: "Orbitron", sans-serif;
+      font-family: "Inter", sans-serif;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
 
+    /* Subtle animated grid background */
     .grid {
       position: absolute;
-      width: 200%;
-      height: 200%;
+      width: 300%;
+      height: 300%;
       background:
         repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(30,242,255,0.05) 50px),
         repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(30,242,255,0.05) 50px);
-      transform: rotateX(60deg) translateY(60px);
-      animation: moveGrid 14s linear infinite;
+      transform: rotateX(60deg) translateY(80px);
+      animation: moveGrid 20s linear infinite;
       z-index: 0;
+      opacity: 0.4;
     }
     @keyframes moveGrid {
-      from { transform: rotateX(60deg) translateY(60px) translateZ(0); }
-      to   { transform: rotateX(60deg) translateY(60px) translateZ(-120px); }
+      from { transform: rotateX(60deg) translateY(80px) translateZ(0); }
+      to   { transform: rotateX(60deg) translateY(80px) translateZ(-150px); }
+    }
+
+    /* Floating particles (ambient glow) */
+    .particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float 8s infinite linear;
+    }
+    @keyframes float {
+      from { transform: translateY(100vh) scale(0.5); opacity: 0.2; }
+      to { transform: translateY(-10vh) scale(1.5); opacity: 0.8; }
     }
 
     .content {
-      z-index: 1;
+      z-index: 2;
       text-align: center;
       max-width: 720px;
       padding: 0 1.5em;
+      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(30,242,255,0.15);
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(30,242,255,0.1);
+      animation: fadeIn 2s ease-out;
     }
+
     h1 {
-      font-size: 3rem;
-      letter-spacing: 2px;
+      font-family: "Orbitron", sans-serif;
+      font-size: 3.2rem;
+      letter-spacing: 3px;
       color: var(--accent);
       text-shadow: 0 0 25px var(--accent);
       margin-bottom: 0.3em;
@@ -60,35 +95,45 @@
       font-size: 1.3rem;
       font-weight: 400;
       color: #b0b0b0;
-      margin-bottom: 1.5em;
+      letter-spacing: 1px;
+      margin-bottom: 1.8em;
+      font-family: "Inter", sans-serif;
     }
     p {
       font-size: 1.1rem;
       color: #c0c0c0;
       line-height: 1.6;
       margin-bottom: 1.8em;
+      text-align: center;
     }
     ul {
       list-style: none;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 1.2em;
+      gap: 1em;
       margin-bottom: 2.5em;
     }
     ul li {
-      border: 1px solid rgba(30,242,255,0.3);
+      border: 1px solid rgba(30,242,255,0.25);
       border-radius: 8px;
       padding: 0.6em 1.2em;
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.03);
       font-size: 0.95rem;
       color: #9feaff;
       text-shadow: 0 0 6px rgba(30,242,255,0.4);
+      transition: all 0.3s ease;
     }
+    ul li:hover {
+      transform: scale(1.05);
+      background: rgba(30,242,255,0.08);
+      border-color: rgba(30,242,255,0.5);
+    }
+
     a.button {
       text-decoration: none;
       color: var(--bg);
-      background: var(--accent);
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
       padding: 0.9em 2.5em;
       border-radius: 50px;
       font-weight: bold;
@@ -100,39 +145,62 @@
       background: #fff;
       color: #000;
       box-shadow: 0 0 45px var(--accent);
+      transform: translateY(-2px);
     }
+
     footer {
       position: absolute;
       bottom: 15px;
       font-size: 0.9rem;
       color: #888;
       letter-spacing: 1px;
+      z-index: 2;
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="grid"></div>
+  <div class="particles">
+    <!-- Randomized glow particles -->
+    <script>
+      const container = document.currentScript.parentElement;
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 8 + 's';
+        container.appendChild(p);
+      }
+    </script>
+  </div>
 
   <main class="content">
     <h1>Moot AI</h1>
     <h2>The AI Coach for Moot Court</h2>
     <p>
-      Moot AI is a browser-based moot court platform with an intelligent coach that scores arguments,
-      maps reasoning, and transforms debate sessions into actionable feedback. Designed for law students,
-      educators, and professionals, Moot AI helps users visualize their logic, refine delivery, and
-      understand how their arguments hold up under pressure.
+      Moot AI combines real-time speech recognition, argument analysis, and generative feedback
+      to help law students, educators, and professionals refine the art of persuasive advocacy.
+      Experience an AI-powered coach that listens, scores, and helps you grow.
     </p>
 
     <ul>
-      <li>Real-time Speech Analysis</li>
-      <li>Interactive Reasoning Maps</li>
-      <li>AI-Generated Scoring Metrics</li>
-      <li>Performance Reports & Transcripts</li>
+      <li>⚖️ Real-Time Argument Scoring</li>
+      <li>🧠 Logic & Reasoning Visualization</li>
+      <li>🗣️ Speech-to-Text + AI Coaching</li>
+      <li>📄 Performance Reports & Transcripts</li>
+      <li>🎓 Adaptive Training Modes</li>
+      <li>💾 Vector-Based Knowledge Integration</li>
     </ul>
 
     <a href="https://mootie.vercel.app/" class="button">Begin Session</a>
   </main>
 
-  <footer>© 2025 Moot AI — All rights reserved.</footer>
+  <footer>© 2025 Moot AI — Created by Kris Pilcher</footer>
 </body>
 </html>
